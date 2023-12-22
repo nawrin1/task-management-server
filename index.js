@@ -46,11 +46,31 @@ dbConnect()
 
 
 const userCollection=client.db("Task-Management").collection("user")
+app.post('/users',async(req,res)=>{
+    const user=req.body
+    const query={email:user.email}
+    const exist=await userCollection.findOne(query)
+    if (exist){
+      return res.send({ message: 'user exists', insertedId: null })
+  
+    }
+    const result = await userCollection.insertOne(user);
+    res.send(result);
+  
+  })
+  
+  app.get('/users', async (req, res) => {
+    console.log(req.headers, "user from backend");
+
+  
+    const result = await userCollection.find().toArray();
+    res.send(result);
+  });
 
 app.get('/', async(req, res) => {
     res.send('task is sitting')
   })
-  
+
 app.listen(port,()=>{
     console.log(`port running ${port}`)
 })
