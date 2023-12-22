@@ -46,6 +46,7 @@ dbConnect()
 
 
 const userCollection=client.db("Task-Management").collection("user")
+const taskCollection=client.db("Task-Management").collection("task")
 app.post('/users',async(req,res)=>{
     const user=req.body
     const query={email:user.email}
@@ -58,6 +59,14 @@ app.post('/users',async(req,res)=>{
     res.send(result);
   
   })
+  app.post('/tasks',async(req, res) => {
+   
+    const data= req.body;
+    console.log(data,"task from backend")
+  
+    const result = await taskCollection.insertOne(data);
+    res.send(result);
+  });
   
   app.get('/users', async (req, res) => {
     console.log(req.headers, "user from backend");
