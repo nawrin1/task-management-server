@@ -3,7 +3,7 @@ const app = express();
 const cors = require('cors');
 require('dotenv').config()
 const port = process.env.PORT || 5000;
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
 app.use(cors());
 app.use(express.json());
@@ -75,7 +75,24 @@ app.post('/users',async(req,res)=>{
     const result = await userCollection.find().toArray();
     res.send(result);
   });
+  app.get('/tasks', async (req, res) => {
+    console.log(req.headers, "task from backend");
 
+  
+    const result = await taskCollection.find().toArray();
+    res.send(result);
+  });
+  app.delete('/tasks/:id', async (req, res) => {
+    const id = req.params.id;
+    const filter= { _id: new ObjectId(id) }
+    console.log(filter,"from del backend")
+    const result = await taskCollection.deleteOne(filter)
+   
+    res.send(result);
+
+
+
+  })
 app.get('/', async(req, res) => {
     res.send('task is sitting')
   })
