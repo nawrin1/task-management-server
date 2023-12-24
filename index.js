@@ -76,10 +76,13 @@ app.post('/users',async(req,res)=>{
     res.send(result);
   });
   app.get('/tasks', async (req, res) => {
-    console.log(req.headers, "task from backend");
+    const email=req.query.email
+    console.log(email,"email")
+    const filter={email:email}
+    // console.log(req.headers, "task from backend");
 
   
-    const result = await taskCollection.find().toArray();
+    const result = await taskCollection.find(filter).toArray();
     res.send(result);
   });
   app.delete('/tasks/:id', async (req, res) => {
@@ -92,6 +95,35 @@ app.post('/users',async(req,res)=>{
 
 
 
+  })
+  app.patch('/tasks/:id', async (req, res) => {
+    const item = req.body;
+    const id = req.params.id;
+    console.log('inside update')
+    const filter = { _id: new ObjectId(id) }
+    const updatedDoc = {
+      $set: {
+        title: item.title,
+        
+        description: item.description,
+       
+       deadline:item.deadline,
+       priority:item.priority
+        
+      }
+    }
+    console.log(updatedDoc)
+
+    const result = await taskCollection.updateOne(filter, updatedDoc)
+    console.log(result)
+    res.send(result);
+  })
+  app.get('/tasks/:id', async (req, res) => {
+    const id = req.params.id;
+    const query = { _id: new ObjectId(id) }
+    const result = await taskCollection.findOne(query);
+    console.log(result,"found")
+    res.send(result);
   })
 app.get('/', async(req, res) => {
     res.send('task is sitting')
