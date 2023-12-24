@@ -78,7 +78,12 @@ app.post('/users',async(req,res)=>{
   app.get('/tasks', async (req, res) => {
     const email=req.query.email
     console.log(email,"email")
-    const filter={email:email}
+    let filter={}
+    if (email){
+      filter={email:email}
+
+    }
+    
     // console.log(req.headers, "task from backend");
 
   
